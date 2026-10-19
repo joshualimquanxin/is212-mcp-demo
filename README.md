@@ -4,9 +4,10 @@ Late-fee rules for a small library. This is the throwaway repo behind
 Team 7's IS212 presentation *MCP: the missing plug* (20 Oct 2026).
 
 The point of the repo is not the code. It is that an AI agent, connected
-to Jira, Google Drive and GitHub through MCP servers, can take a user
-story from the backlog to an open pull request with zero integration code
-written by us.
+to Jira, Google Drive, GitHub and our own circulation database through MCP
+servers, can take a user story from the backlog to an open pull request with
+zero integration code written by us. Three of the servers are vendors'; the
+fourth is 71 lines of Python in this repo.
 
 ## What is here
 
@@ -15,9 +16,18 @@ written by us.
 | `libfines/fines.py` | All the fee logic: `DAILY_RATE` and `late_fee()` |
 | `tests/test_fines.py` | The pytest suite |
 | `.github/workflows/tests.yml` | CI gate: pytest runs on every pull request |
+| `circulation_server.py` | Our own MCP server: the library's circulation database (one tool, one resource, one prompt) |
+| `.mcp.json` | The whole integration for that server: one entry |
 | `CLAUDE.md` | How the agent is told to work in this repo |
 | `.claude/settings.json` | What the agent may do without asking, must ask for, and can never do |
-| `demo/` | Run sheet, the demo prompt, reset and preflight helpers |
+| `demo/` | Run sheet, the demo prompt, reset, preflight and server-check helpers |
+
+## Run the server by hand
+
+```
+pip install mcp
+python demo/check_server.py      # starts it over stdio, lists tools, calls one
+```
 
 ## Run the tests
 

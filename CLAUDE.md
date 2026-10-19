@@ -22,6 +22,14 @@ CI workflow. Used for the IS212 Team 7 presentation on MCP.
   document with the Google Drive `read_file_content` tool (the file id is in the URL)
   before writing any code. The numbers live in the policy, not in the ticket.
 
+## Our own MCP server: circulation
+
+`circulation_server.py` is the library's circulation system (members and their
+current loans), started by Claude Code from `.mcp.json`. Tool `overdue_loans`
+returns every overdue loan with the fee the member owes today under the rules in
+`main`. Fee-rule changes affect these real members, so every PR that changes how a
+fee is computed carries an **Impact** line (see step 6).
+
 ## How to deliver a story (LIB-n)
 
 1. Read the story with `getJiraIssue`, then any document it links to.
@@ -30,13 +38,16 @@ CI workflow. Used for the IS212 Team 7 presentation on MCP.
    `tests/test_fines.py`. Minimal change: no refactors, no new files, no README edits.
 4. `python -m pytest -q` must pass before anything is pushed.
 5. Commit as `LIB-n: <story title>` and `git push -u origin <branch>`.
-6. Open the pull request with the GitHub MCP tool `create_pull_request`
+6. If the story changes how a fee is computed: call `overdue_loans` once, apply the
+   new rule to each loan yourself, and write one line:
+   `Impact: N of M current overdue loans change; largest reduction $X.XX (<item type>, <days> days late, $old -> $new).`
+7. Open the pull request with the GitHub MCP tool `create_pull_request`
    (owner `joshualimquanxin`, repo `is212-mcp-demo`, base `main`).
-   Title `LIB-n: <story title>`. Body: the story link, then one ticked line per
-   acceptance criterion saying how it is met.
-7. Comment the PR URL on the story with `addOrEditJiraIssueComment`, then move the
+   Title `LIB-n: <story title>`. Body: the story link, one ticked line per
+   acceptance criterion saying how it is met, then the Impact line.
+8. Comment the PR URL on the story with `addOrEditJiraIssueComment`, then move the
    story with `transitionJiraIssue` using transition name `In Review`.
-8. Never merge. A human reviews the PR. Do not use `gh`. Do not push to `main`.
+9. Never merge. A human reviews the PR. Do not use `gh`. Do not push to `main`.
 
 Do not ask for clarification; the story plus the linked policy are the whole spec.
 Say what you are doing in one short line per step, no summaries at the end beyond

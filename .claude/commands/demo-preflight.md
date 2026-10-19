@@ -18,3 +18,5 @@ earlier one failed. Finish with a single line: `READY` or `NOT READY: <reasons>`
    not behind or ahead of origin/main, and `git branch --list "feature/LIB-3*"` is empty.
 5. CI: `gh run list --branch main --limit 1`. PASS if the latest run on main succeeded.
 6. Tests: `python -m pytest -q`. PASS if all tests pass. Report the count.
+7. Our server: call the `circulation` MCP tool `overdue_loans`. PASS only if it
+   returns 12 loans of which exactly 3 have `fee_today` above 20. Report both numbers.
