@@ -38,6 +38,12 @@ A live audience is watching, so work in as few turns as possible: make the calls
 grouped in one step in parallel, in a single turn. No plans, no questions, no summary
 at the end.
 
+The screen groups tool calls, so the audience follows you through your text. Before
+each step's tool calls, write one plain line of under 20 words saying what you are
+doing and which MCP server you are using, based on what you have actually found (for
+example `Reading LIB-3 from Jira through Atlassian's MCP server.`). Name our own
+server as "our circulation server".
+
 1. In parallel: `getJiraIssue` for the story, and `Read` both `libfines/fines.py` and
    `tests/test_fines.py`.
 2. In parallel: `read_file_content` on the document the story links to and, if the

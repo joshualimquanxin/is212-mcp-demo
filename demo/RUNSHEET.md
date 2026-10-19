@@ -26,19 +26,25 @@ Slot 2:00. Script about 1:30. The last 0:30 is buffer: don't fill it.
 
 ## Timeline
 
-The clock starts when slide 10 appears. Agent times are from the 19 Oct dry run
-(Opus 5.5): the first approval came 31 s after Enter, so your talking, not the
-agent, sets the pace. If the screen gets ahead of you, keep narrating in order:
-everything stays on screen and approvals wait for you.
+The clock starts when slide 10 appears. Agent times are from the 19 Oct runs
+(Opus 5.5): the first approval came 31 to 41 s after Enter. If the screen gets ahead
+of you, keep narrating in order: everything stays on screen and approvals wait for you.
+
+**What the screen shows (Claude Code v2.1.303).** It groups tool calls into one grey
+line ("Calling Google Drive, circulation…"), so CLAUDE.md has the agent write one
+white line before each step saying which MCP server it's using. Those white lines are
+your cues; point at them. Don't hunt for tool names like `getJiraIssue`: they aren't
+shown.
 
 | Clock | Screen | You |
 |---|---|---|
 | 0:00 | Slide 10 | Opening line, Alt-Tab, Enter |
-| ~0:10 | `getJiraIssue` (+ two file reads) | "Pulls the story out of Jira" |
-| ~0:15 | `read_file_content` + `overdue_loans` | The twist, then "this one's ours" |
-| ~0:25 | Edits, `pytest` | "Twenty dollars from the policy. Green." |
-| ~0:35 | Approval: Jira comment | Read the impact off the screen, press `1` |
-| ~0:45 | Approval: move to In Review | Press `1`, "I never opened Jira" |
+| ~0:05 | "Mulling…" (it plans for about 10 s) | A bank line (below) |
+| ~0:15 | "…from Jira through Atlassian's MCP server" | "Pulls the story out of Jira" |
+| ~0:20 | "…Google Drive's MCP server … our circulation server" | The twist, then "this one's ours" |
+| ~0:30 | "$20" line, two diffs, "Running the pytest suite" | "Twenty dollars from the policy. Green." |
+| ~0:40 | Approval: "Atlassian MCP — Add or edit Jira issue comment" | Read the impact off the screen, press `1` |
+| ~0:45 | Approval: "Atlassian MCP — Transition Jira issue" | Press `1`, "I never opened Jira" |
 | ~0:50 | Switch to **Sandbox** tab | Hinge line, then Act 2 |
 | ~1:15 | Press `3` | Close |
 | ~1:30 | | "Thank you." Questions. |
@@ -61,28 +67,30 @@ screen, never from memory. Pause after the two twists. Never apologise for speed
 
 ### Act 1: useful
 
-**Screen:** `getJiraIssue LIB-3`
+**Screen:** "Mulling…" for about 10 s while it plans. Use the first bank line.
+
+**Screen:** "Reading LIB-3 from Jira through Atlassian's MCP server" (the agent's own words vary a little)
 
 > "First it pulls the story out of Jira, acceptance criteria and all. That's the use
 > case from earlier."
 
-**Screen:** Google Drive `read_file_content`, and `circulation - overdue_loans`
+**Screen:** "…section 3 of the fee policy from Google Drive's MCP server … our circulation server", then the grey "Calling Google Drive, circulation…"
 
 > "Now the twist: the ticket doesn't say what the cap is. It links to our fee policy,
 > so it followed the link into Google Drive. Different company, same plug."
 
-*Pause one beat.* Then point at `overdue_loans`:
+*Pause one beat.* Then point at "our circulation server":
 
 > "And this one's ours: about seventy lines of Python wrapping the library's loan
 > database, running right here on this laptop. It's asking which members this
 > change will hit."
 
-**Screen:** edits to `fines.py` and `test_fines.py`, then `pytest`
+**Screen:** "Policy section 3 caps any item at $20.00…", the diffs to `fines.py` and `test_fines.py`, then "Running the pytest suite…"
 
 > "Twenty dollars, straight from the policy, into the code, with the tests the story
 > asked for." *(pytest passes)* "Green."
 
-**Screen:** approval for `addOrEditJiraIssueComment`
+**Screen:** the approval box "Tool use · Atlassian MCP — Add or edit Jira issue comment", with the comment text under `commentBody`
 
 > "And it stops. Anything it writes to Jira needs me. And I read what it's about to
 > send:" *(point at the Impact line and read it, e.g. "three of twelve loans change,
@@ -90,7 +98,7 @@ screen, never from memory. Pause after the two twists. Never apologise for speed
 
 Press **1**. *If the comment is cut off in the prompt, skip the impact sentence.*
 
-**Screen:** approval for `transitionJiraIssue`. Press **1**.
+**Screen:** the approval box "Atlassian MCP — Transition Jira issue". Press **1**.
 
 > "And the card moves to In Review. I never opened Jira."
 
@@ -116,8 +124,12 @@ Then the script for the screen you found before the talk (see "Setup on the day"
 > `secrets.txt`?" *(pause; let the room get there)* *(point at the body)* "And now
 > it wants to save our AWS key into the note. A fake one, don't worry."
 
-> "One paragraph hidden in that tool's description told it to. The model reads it.
-> I never see it."
+> "One paragraph in that tool's description told it to." *(point at the small print
+> under "About the … Tool", where the `<IMPORTANT>` paragraph starts)* "It's even in
+> the small print of this box. Nobody reads the small print. The model always does."
+
+*If the small print doesn't reach the paragraph, say "One paragraph hidden in that
+tool's description told it to. The model reads it; we skim past it."*
 
 Press **3**.
 
@@ -266,6 +278,7 @@ prints when the first approval would appear), then `powershell -File demo/reset.
 |---|---|---|---|---|---|
 | 19 Oct | Opus 5.5 (headless dry run, KAN-3) | 31 s | not run | n/a | Clean: Jira + 2 reads, then Drive + overdue_loans, edits, 9 passed, comment + transition. Impact line correct. |
 | 19 Oct | Opus 5.5, stage settings (headless, KAN-3) | 36 s | not run | n/a | Clean, same order; two extra small edits to the test file, 10 passed. Impact line correct. |
+| 19 Oct | Opus 5.5, interactive v2.1.303, agent announces steps (KAN-3) | 41 s | not run | n/a | Every server named on screen. Includes ~5 s waiting for Atlassian to connect (cold start) and an extra Jira lookup because the key was still KAN. |
 | | | | | | |
 
 ## Q&A: likely questions
@@ -276,8 +289,9 @@ prints when the first approval would appear), then `powershell -File demo/reset.
 - **"Doesn't the model just catch it?"** Sometimes, and that's the point of screen B:
   you're relying on judgement, not on the protocol. Approvals, sandboxing and pinned
   versions work whether the model notices or not.
-- **"Why not just read the descriptions?"** Do, but a server can change them after you've
-  approved it, so pin the version and re-read after updates (check 1).
+- **"Why not just read the descriptions?"** Do: Claude Code even prints the start of one
+  in each approval box. But a server can change its descriptions after you've approved
+  it, so pin the version and re-read after updates (check 1).
 - **"How hard was your own server?"** 72 lines with the official Python SDK: one tool,
   one resource, one prompt, and one entry in `.mcp.json`.
 - **"Why didn't it open a pull request?"** It stops at review on purpose: a human reads the
