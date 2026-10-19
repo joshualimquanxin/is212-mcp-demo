@@ -13,6 +13,7 @@ Raw events are written to demo/logs/<timestamp>-<story>.jsonl.
 import argparse
 import datetime as dt
 import json
+import os
 import pathlib
 import shutil
 import subprocess
@@ -23,10 +24,30 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PROMPT = (ROOT / "demo" / "prompt.txt").read_text(encoding="utf-8").strip()
 
 APPROVAL_TOOLS = [
-    "mcp__plugin_github_github__create_pull_request",
+    "mcp__github__create_pull_request",
     "mcp__claude_ai_Atlassian_MCP__addOrEditJiraIssueComment",
     "mcp__claude_ai_Atlassian_MCP__transitionJiraIssue",
 ]
+
+
+def child_env():
+    """The environment for the headless run.
+
+    A GitHub token saved as a Windows *User* variable is invisible to a shell
+    started before it was set, so read it from the registry when it is missing.
+    CLAUDECODE is dropped so the run also works from inside a Claude Code session.
+    """
+    env = os.environ.copy()
+    env.pop("CLAUDECODE", None)
+    if sys.platform == "win32" and "GITHUB_PERSONAL_ACCESS_TOKEN" not in env:
+        import winreg
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+                env["GITHUB_PERSONAL_ACCESS_TOKEN"] = winreg.QueryValueEx(
+                    key, "GITHUB_PERSONAL_ACCESS_TOKEN")[0]
+        except OSError:
+            pass
+    return env
 
 
 def brief(name, inp):
@@ -69,7 +90,8 @@ def main():
     t0 = time.monotonic()
     started = {}
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                            text=True, encoding="utf-8", errors="replace", cwd=ROOT)
+                            text=True, encoding="utf-8", errors="replace", cwd=ROOT,
+                            env=child_env())
     with log_path.open("w", encoding="utf-8") as log:
         for line in proc.stdout:
             t = time.monotonic() - t0

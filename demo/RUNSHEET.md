@@ -98,10 +98,10 @@ the last 10 seconds.
 - Slide 4 diagram (Cassia): the "notes server (ours) · local · stdio" box can
   become "circulation server (ours) · local · stdio · sqlite" so the diagram shows
   the exact four servers Joshua runs. Keep "notes" if Warren's Demo 2 still uses it.
-- Slide 5 card (Cassia): replace the two-entry `.vscode/mcp.json` with our real
-  `.mcp.json` (the `circulation` stdio entry) and one line: "the three cloud
-  servers are claude.ai connectors: one OAuth click each, no file". `KAN-3` →
-  `LIB-3`. Optional: a screenshot of `circulation_server.py` with "71 lines,
+- Slide 5 card (Cassia): replace the `.vscode/mcp.json` card with our real
+  `.mcp.json`: `github` over HTTP (scoped token, two toolsets) and `circulation`
+  over stdio, in one file. One line under it: "Jira and Google Drive are claude.ai
+  connectors: one OAuth click each, no file". `KAN-3` → `LIB-3`. Optional: a screenshot of `circulation_server.py` with "71 lines,
   one tool, one resource, one prompt" so Cassia proves the server side before
   Joshua uses it.
 - Slide 7: "Claude Desktop + Atlassian + GitHub connectors" → "Claude Code (VS Code)

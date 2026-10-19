@@ -17,7 +17,7 @@ fourth is 71 lines of Python in this repo.
 | `tests/test_fines.py` | The pytest suite |
 | `.github/workflows/tests.yml` | CI gate: pytest runs on every pull request |
 | `circulation_server.py` | Our own MCP server: the library's circulation database (one tool, one resource, one prompt) |
-| `.mcp.json` | The whole integration for that server: one entry |
+| `.mcp.json` | The whole integration: GitHub's remote server over HTTP, ours over stdio |
 | `CLAUDE.md` | How the agent is told to work in this repo |
 | `.claude/settings.json` | What the agent may do without asking, must ask for, and can never do |
 | `demo/` | Run sheet, the demo prompt, reset, preflight and server-check helpers |
