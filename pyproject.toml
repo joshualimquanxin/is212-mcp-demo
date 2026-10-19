@@ -1,0 +1,9 @@
+[project]
+name = "libfines"
+version = "0.1.0"
+description = "Late-fee rules for a small library - IS212 Team 7 MCP demo"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
