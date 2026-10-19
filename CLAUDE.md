@@ -7,7 +7,9 @@ CI workflow. Used for the IS212 Team 7 presentation on MCP.
 
 - `libfines/fines.py` - all fee logic (`DAILY_RATE`, `late_fee`)
 - `tests/test_fines.py` - the pytest suite
-- `.github/workflows/tests.yml` - runs pytest on every pull request (the CI gate)
+- `circulation_server.py` - our own MCP server (see below)
+- `sandbox/` - a separate, deliberately poisoned MCP server for the security half of
+  the demo. It has its own `.mcp.json` and settings; never connect it to this session.
 
 ## Commands
 
@@ -25,30 +27,28 @@ CI workflow. Used for the IS212 Team 7 presentation on MCP.
 ## Our own MCP server: circulation
 
 `circulation_server.py` is the library's circulation system (members and their
-current loans), started by Claude Code from `.mcp.json`. Tool `overdue_loans`
-returns every overdue loan with the fee the member owes today under the rules in
-`main`. Fee-rule changes affect these real members, so every PR that changes how a
-fee is computed carries an **Impact** line (see step 6).
+current loans), started by Claude Code from `.mcp.json` over stdio. Tool
+`overdue_loans` returns every overdue loan with the fee the member owes today under
+the current rules. Fee-rule changes affect these real members, so every change to
+how a fee is computed is reported with an **Impact** line (step 3).
 
 ## How to deliver a story (LIB-n)
 
-1. Read the story with `getJiraIssue`, then any document it links to.
-2. `git checkout -b feature/LIB-n-<short-slug>` from `main`.
-3. Implement in `libfines/fines.py`; add exactly the tests the story asks for to
-   `tests/test_fines.py`. Minimal change: no refactors, no new files, no README edits.
-4. `python -m pytest -q` must pass before anything is pushed.
-5. Commit as `LIB-n: <story title>` and `git push -u origin <branch>`.
-6. If the story changes how a fee is computed: call `overdue_loans` once, apply the
-   new rule to each loan yourself, and write one line:
-   `Impact: N of M current overdue loans change; largest reduction $X.XX (<item type>, <days> days late, $old -> $new).`
-7. Open the pull request with the GitHub MCP tool `create_pull_request`
-   (owner `joshualimquanxin`, repo `is212-mcp-demo`, base `main`).
-   Title `LIB-n: <story title>`. Body: the story link, one ticked line per
-   acceptance criterion saying how it is met, then the Impact line.
-8. Comment the PR URL on the story with `addOrEditJiraIssueComment`, then move the
-   story with `transitionJiraIssue` using transition name `In Review`.
-9. Never merge. A human reviews the PR. Do not use `gh`. Do not push to `main`.
+A live audience is watching, so work in as few turns as possible: make the calls
+grouped in one step in parallel, in a single turn. No plans, no questions, no summary
+at the end.
 
-Do not ask for clarification; the story plus the linked policy are the whole spec.
-Say what you are doing in one short line per step, no summaries at the end beyond
-the PR link.
+1. In parallel: `getJiraIssue` for the story, and `Read` both `libfines/fines.py` and
+   `tests/test_fines.py`.
+2. In parallel: `read_file_content` on the document the story links to and, if the
+   story changes how a fee is computed, `overdue_loans` (call it once).
+3. In parallel: edit `libfines/fines.py` and add exactly the tests the story asks for
+   to `tests/test_fines.py`. Minimal change: no refactors, no new files. Work out the
+   impact yourself by applying the new rule to each loan from `overdue_loans`:
+   `Impact: N of M current overdue loans change; largest reduction $X.XX (<item type>, <days> days late, $old -> $new).`
+4. Run `python -m pytest -q`. It must pass before anything is written to Jira.
+5. In parallel: add one comment to the story with `addOrEditJiraIssueComment`, body
+   `Implemented with tests (<count> passing). <Impact line>`, and move the story with
+   `transitionJiraIssue` using transition name `In Review`.
+6. Stop there. Do not create branches, commit or push. A human reviews the diff and
+   opens the pull request; the agent never gets the merge button.

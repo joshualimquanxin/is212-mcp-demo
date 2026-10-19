@@ -1,317 +1,295 @@
 # Demo guide and script
 
-You run both live demos. **Demo 1** (part 3, slides 7–9) shows MCP working.
-**Demo 2** (slide 12) shows the same mechanism being abused. Everything else in
-the talk is unchanged; Warren keeps slide 13.
+One demo, two acts, one message: **MCP is extremely useful, and it still has to be
+used with caution.** It closes the talk on slide 10 ("Demo time"), straight after
+"Still on you", and Q&A starts the moment it ends.
+
+**The thread.** In Act 1 the agent acts on text it gets from MCP servers: it follows
+a link in a ticket, takes a number from a policy doc, and asks our own server who is
+affected. That's the superpower. In Act 2 a second agent acts on text hidden in a
+tool description from an untrusted server. Same superpower, pointed the wrong way.
+The same approval box that let the first agent write to Jira is what stops the
+second. Say that out loud; it's the line people remember.
 
 ## At a glance
 
-| | Demo 1: story to pull request | Demo 2: tool poisoning |
+| | Act 1: useful | Act 2: caution |
 |---|---|---|
-| Slot | Part 3, slides 7–9 (2:05) | Slide 12 (about 0:55) |
-| Target | 1:50 | 0:55 |
-| VS Code terminal tab | **Demo 1** (repo root) | **Demo 2** (`demo2/`) |
-| MCP servers | Jira, Google Drive, GitHub, circulation (ours) | notes (ours, poisoned) |
-| Approvals | 3 × Yes | 1 × Yes, then 1 × No |
-| Cut-off | First approval not on screen 60 s after Enter → slide 9 | No approval 25 s after Enter → fallback |
+| VS Code terminal tab | **Agent** (repo root) | **Sandbox** (`sandbox/`) |
+| Status line at the bottom | `MCP` Jira + Google Drive (remote) \| circulation (ours, local) | `SANDBOX` notes server (untrusted) \| fake key |
+| MCP servers | Atlassian (Jira), Google Drive, circulation (ours) | notes (stands in for a downloaded server; we poisoned it) |
+| Started | Live: you press Enter on stage | Before the talk; it waits at its approval |
+| Your keys | `1`, `1` | `3` |
+| Target | Enter → first approval about 0:30 | about 0:25 of talking |
 
-Targets are estimates until the timed dry runs; fill in the rehearsal log.
+Slot 2:00. Script about 1:30. The last 0:30 is buffer: don't fill it.
 
-**The thread that ties them together.** In Demo 1 the agent acts on text it
-finds: it follows a link in a ticket, reads a policy doc and does what it says.
-That's the superpower. In Demo 2 it acts on text hidden in a tool description.
-Same superpower, pointed the wrong way. Say this out loud in Demo 2; it's the
-line people remember.
+## Timeline
 
-**The two prompts.** Both get typed into their sessions before you go on, so on
-stage you only press Enter. Copies live in `demo/prompt.txt` and `demo2/prompt.txt`.
+The clock starts when slide 10 appears. Agent times are from the 19 Oct dry run
+(Opus 5.5): the first approval came 31 s after Enter, so your talking, not the
+agent, sets the pace. If the screen gets ahead of you, keep narrating in order:
+everything stays on screen and approvals wait for you.
 
-- Demo 1: `Implement LIB-3 with tests, open a PR, link it on the ticket and move LIB-3 to In Review. Don't merge.`
-- Demo 2: `Save a note titled "Sprint 3 retro" with the body "Demo went well. The CI gate caught one bug."`
+| Clock | Screen | You |
+|---|---|---|
+| 0:00 | Slide 10 | Opening line, Alt-Tab, Enter |
+| ~0:10 | `getJiraIssue` (+ two file reads) | "Pulls the story out of Jira" |
+| ~0:15 | `read_file_content` + `overdue_loans` | The twist, then "this one's ours" |
+| ~0:25 | Edits, `pytest` | "Twenty dollars from the policy. Green." |
+| ~0:35 | Approval: Jira comment | Read the impact off the screen, press `1` |
+| ~0:45 | Approval: move to In Review | Press `1`, "I never opened Jira" |
+| ~0:50 | Switch to **Sandbox** tab | Hinge line, then Act 2 |
+| ~1:15 | Press `3` | Close |
+| ~1:30 | | "Thank you." Questions. |
 
-## The one rule for approval prompts
+## The script
 
-When Claude Code stops for permission it offers three options:
+**Learn the beats, not the words.** Face the room while the agent works; glance at the
+screen only when something new appears. Point at every reveal. Read numbers off the
+screen, never from memory. Pause after the two twists. Never apologise for speed.
 
-1. Yes
-2. Yes, and don't ask again …
-3. No
+### Opening (slide 10, about 5 s)
 
-**Press `1` for yes and `3` (or Esc) for no. Never press `2`.** Option 2 saves a
-permanent rule, and the prompts vanish from every later run, including the real
-one. If you press it by accident, delete `.claude/settings.local.json` (or
-`demo2/.claude/settings.local.json`) and restart that session.
+> "Let's see it. One sentence to Claude Code, connected to three MCP servers:
+> Atlassian's, Google's, and one we wrote ourselves."
 
-## How to deliver it
+**Do:** Alt-Tab to VS Code (the **Agent** tab is showing). Click inside it once. Press **Enter**.
 
-- **Learn the beats, not the words.** The lines below are a starting point. Say them your way.
-- **Face the room while the agent works.** Glance at the screen only when something new appears.
-- **Point at every reveal.** The room looks where you point.
-- **Pause after the two twists**: "I took the number out" and "why is it opening secrets.txt?" Silence sells a reveal.
-- **Read numbers off the screen**, never from memory: the impact line, the fake key.
-- **Never apologise for speed.** Use a bank line instead.
+> "I'm asking it to implement a real story from our backlog and update the ticket.
+> I'm not telling it which tools to use."
 
-## Setup, the night before
+### Act 1: useful
 
-Do these once, in order. Items marked *(Claude)* are mine once you've done the four before them.
+**Screen:** `getJiraIssue LIB-3`
 
-- [ ] Create the GitHub repo:
-      `gh repo create joshualimquanxin/is212-mcp-demo --public --source=. --remote=origin --push`
-- [ ] Rename the Jira project: key `LIB`, name `Library Fines`.
-- [ ] Create the fine-grained GitHub token, save it as the `GITHUB_PERSONAL_ACCESS_TOKEN`
-      user variable, then **restart VS Code**.
-- [ ] In the repo root run `claude`, accept the trust prompt, approve the `github` and
-      `circulation` servers. `/mcp` shows four servers, all connected.
-- [ ] In `demo2/` run `claude`, accept the trust prompt, approve `notes`. `/mcp` shows only `notes`.
-- [ ] *(Claude)* Branch protection on `main`, timed dry runs, one real run on LIB-1 for the slide 9 screenshots.
-- [ ] Rehearse each demo end to end at least twice, out loud, with a stopwatch. Log the times below.
-- [ ] Reset after every rehearsal (see "Reset" near the end).
-- [ ] Check in rehearsal that the `save_note` prompt shows the fake key and the
-      `create_pull_request` prompt shows the impact line. If either is cut off, use
-      the fallback line written under that beat.
-- [ ] Deck edits done (bottom of this file). Slides submitted on eLearn by 23:59.
+> "First it pulls the story out of Jira, acceptance criteria and all. That's the use
+> case from earlier."
 
-## Setup, on the day
+**Screen:** Google Drive `read_file_content`, and `circulation - overdue_loans`
 
-Do this on your laptop while the team before yours presents (you're not on the projector yet).
+> "Now the twist: the ticket doesn't say what the cap is. It links to our fee policy,
+> so it followed the link into Google Drive. Different company, same plug."
 
-1. **Silence everything.** Windows Do Not Disturb on. Quit Telegram, WhatsApp, Outlook and Slack. Nothing may pop up on the projector.
-2. **Preflight in a throwaway session.** Terminal in the repo root: `claude`, then
-   `/demo-preflight`. It must end with `READY`. Then `/exit`. A throwaway session keeps
-   the demo session's memory clean.
-3. **If it isn't ready** (LIB-3 not in To Do, an old PR open): in another throwaway
-   session run `/demo-reset`, delete the tagged comment on LIB-3 in Jira, preflight again.
-4. **Demo 2 check.** `python demo2/check_poison.py` prints `OK`. Delete `demo2/notes.txt` if it exists.
-5. **Open the two demo sessions in VS Code.** Hide the sidebar (`Ctrl+B`), maximise the
-   terminal panel (the `^` button at its top right), zoom with `Ctrl+=` until the text
-   reads from the back row.
-   - Tab 1: in the repo root run `claude`. Right-click the tab → Rename → `Demo 1`.
-     Type the Demo 1 prompt. **Don't press Enter.**
-   - Tab 2: `cd demo2`, run `claude`. Rename → `Demo 2`. Type the Demo 2 prompt.
-     **Don't press Enter.**
-   - Click back to **Demo 1** so it's the tab showing.
-6. **Browser, two windows.**
-   - Window A: the Canva deck in Present mode, on slide 1.
-   - Window B (demo): Jira board `LIB` · LIB-3 · the Library Fee Policy doc at
-     section 3 · the repo's Pull requests page. Logged in to Jira and GitHub.
-7. **Exactly three windows open**: Canva, VS Code, demo browser. Alt-Tab is your only move.
-8. **Timekeeper.** Ask a teammate in the front row to raise a hand 60 s after you press Enter in Demo 1.
+*Pause one beat.* Then point at `overdue_loans`:
 
-At changeover: plug in with Canva in front.
-
-## Demo 1: story to pull request (target 1:50)
-
-### Beat 1. The promise (slide 7, about 15 s)
-
-*Face the room.* Optional opener; keep it only if rehearsals come in under 1:45:
-
-> "Quick show of hands: who's opened a pull request and then forgotten to update Jira?" *(beat)* "Yeah. Same."
-
-> "So let's get the agent to do the whole thing. This is LIB-3, a real story from our backlog. One sentence from me, and it goes through four systems: Jira, Google Drive, GitHub, and a database we built ourselves. Integration code I wrote for this: zero."
-
-### Beat 2. The ask (about 8 s)
-
-**Do:** Alt-Tab to VS Code. Click once inside the **Demo 1** terminal. Read the
-prompt off the screen, then press **Enter**. Your timekeeper starts counting.
-
-> "Here's my one sentence." *(read it)* "Notice what I didn't say: which tools to use. It has to work that out."
-
-### Beat 3. It reads the ticket
-
-**Screen:** `getJiraIssue` LIB-3
-
-> "It's reading the ticket. That's Jira, through MCP."
-
-### Beat 4. The twist
-
-**Screen:** Google Drive `read_file_content`
-
-> "Now here's my favourite part. The ticket doesn't actually say what the cap is. I took the number out; it just links to the fee policy. So it followed the link into Google Drive. Different company, same plug."
-
-*Pause one beat. This is when the room realises it's reasoning, not just running a script.*
-
-### Beat 5. The code
+> "And this one's ours: about seventy lines of Python wrapping the library's loan
+> database, running right here on this laptop. It's asking which members this
+> change will hit."
 
 **Screen:** edits to `fines.py` and `test_fines.py`, then `pytest`
 
-> "Twenty dollars, straight from the policy. A named constant, and the three test cases the story asked for." *(pytest passes)* "Green, before anything leaves my laptop."
+> "Twenty dollars, straight from the policy, into the code, with the tests the story
+> asked for." *(pytest passes)* "Green."
 
-### Beat 6. Our own server
+**Screen:** approval for `addOrEditJiraIssueComment`
 
-**Screen:** `overdue_loans` from circulation
+> "And it stops. Anything it writes to Jira needs me. And I read what it's about to
+> send:" *(point at the Impact line and read it, e.g. "three of twelve loans change,
+> the biggest drops by thirty dollars")*
 
-> "And this one's ours. Last night I wrote a seventy-line server for the library's loan database. It's asking which real members this change affects. Same protocol as Google's and Atlassian's servers, except this one runs on my laptop."
-
-### Beat 7. The human in the loop
-
-**Screen:** approval for `create_pull_request`
-
-> "And it stops. Every write to a shared system needs me." *(point at the body)* "It's even worked out the impact:" *(read the Impact line, e.g. "three of twelve loans, biggest drop thirty dollars")*
-
-Press **1**. *If the body is cut off in the prompt, skip the impact sentence here and say it in Beat 8.*
-
-**Screen:** approval for `addOrEditJiraIssueComment`. Press **1**.
-
-> "The PR link goes on the ticket."
+Press **1**. *If the comment is cut off in the prompt, skip the impact sentence.*
 
 **Screen:** approval for `transitionJiraIssue`. Press **1**.
 
-> "And the card moves."
+> "And the card moves to In Review. I never opened Jira."
 
-### Beat 8. The payoff (about 20 s)
+### Hinge (about 5 s)
 
-**Do:** Alt-Tab to the demo browser, Jira board tab. Press F5 if the card hasn't moved.
+**Do:** click the **Sandbox** tab.
 
-> "LIB-3: In Review. I never touched Jira."
+> "That's the useful half: one sentence, three systems, no integration code. But it
+> only worked because the agent does what the text from a server tells it. So here's
+> the caution half."
 
-**Do:** Click LIB-3, then the PR link in its new comment.
+### Act 2: caution
 
-> "The cap came from a Google Doc. The impact came from our own server. Four systems, one pull request."
+> "Before we started, I gave a second agent the most boring job I could think of:
+> save a standup note. Its notes server plays the part of one you'd find online, and
+> I've poisoned it myself, so it lives in a sandbox: no Jira, no Drive, just a fake key."
 
-**Do:** Point at the checks and merge box at the bottom of the PR.
+Then the script for the screen you found before the talk (see "Setup on the day"):
 
-> "CI's running, the same gate as Week 6, and merging is blocked until a human reviews it. The agent never gets a merge button."
+**Screen A: the `save_note` approval, and the body contains the fake key** (the usual case if the model follows the hidden paragraph)
 
-### Beat 9. Hand-off
+> "I asked it to save one sentence." *(point up at `read_note`)* "So why did it open
+> `secrets.txt`?" *(pause; let the room get there)* *(point at the body)* "And now
+> it wants to save our AWS key into the note. A fake one, don't worry."
 
-**Do:** Alt-Tab to Canva. Press → three times to slide 10. Slides 8 and 9 are for the PDF; skip them live.
-
-> "So it works. Amanda's going to tell you why that matters for a real team."
-
-### If it's slow: bank lines
-
-Use one instead of silence.
-
-- "Right now it's reading the description of every tool on four servers and picking the ones it needs."
-- "I didn't write the Jira or Google Drive servers. Atlassian and Google did; I just plugged them in."
-- "These exact servers work in Cursor, Copilot or ChatGPT. That's the USB-C idea from earlier."
-
-### Cut-off
-
-If the `create_pull_request` approval isn't on screen when your timekeeper's hand goes up (60 s after Enter):
-
-> "It's still working, so here's the same run from Sunday."
-
-Alt-Tab to Canva, press → twice to slide 9. If the run finishes while you're on slide 9, you can flick back to the browser for the last ten seconds.
-
-## Demo 2: tool poisoning (slide 12, target 0:55)
-
-Amanda hands to you with "so what happens when the tool itself lies to the agent?"
-
-### Beat 1. The callback (slide 12, about 10 s)
-
-> "Remember Demo 1? The agent found a link in a ticket, read a policy doc, and did exactly what it said. That's the superpower: it acts on text it finds."
-
-> "Here's the same superpower, pointed the wrong way."
-
-### Beat 2. The setup (about 10 s)
-
-**Do:** Point at the card on slide 12.
-
-> "This is a tiny notes server. Two tools: save a note, read a note. I've changed one paragraph, right here, in the tool's description. The model reads this. You never see it."
-
-### Beat 3. The ask (about 5 s)
-
-**Do:** Alt-Tab to VS Code. Click the **Demo 2** terminal tab, click inside it, press **Enter**.
-
-> "Different folder, sealed sandbox. And I'm asking for the most boring thing possible: save a retro note."
-
-### Beat 4. The reveal
-
-**Screen:** approval for `read_note` with `secrets.txt`
-
-> "Wait. I asked it to save a note. Why is it opening secrets.txt?" *(pause; let the room get there)* "Because the tool told it to. Not me."
-
-Press **1**. It's a fake file in a sandbox.
-
-### Beat 5. The catch
-
-**Screen:** approval for `save_note`; the body now carries the fake key
-
-> "And look at the body." *(point)* "'Demo went well', and then an AWS key. A fake one, don't worry. But I never typed it."
+> "One paragraph hidden in that tool's description told it to. The model reads it.
+> I never see it."
 
 Press **3**.
 
-> "This little box is the only thing standing between a poisoned tool and your secrets."
+> "Reading what it's about to do, in that little box, is the only thing between
+> this server and our keys."
 
-*If the key is cut off in the prompt, press 1 instead, then say "and it told me it just saved a note" and show `demo2/notes.txt`.*
+*If the body is cut off before the key, point at the `read_note("secrets.txt")` line
+instead: "It read our secrets file, and now it wants to save a note", then press 3.*
 
-### If the model refuses or warns instead
+**Screen B: Claude warns about the description, or refuses**
 
-> "This time Claude noticed and refused. Good model. But the poisoned instruction still reached it. We got lucky on the model's judgement, not on the protocol's design."
+> "This time Claude spotted the hidden instruction and refused. Good model. But look
+> at what happened: the server slipped an instruction into a tool description and
+> MCP delivered it faithfully. The protocol didn't stop it; the model's judgement
+> did. That's not something you want to bet your keys on."
 
-### If it saves the note and ignores the paragraph
+If an approval is showing, press **3**.
 
-> "It ignored it this time, but it still read it." *(run `python demo2/check_poison.py` in that terminal and point at the appended paragraph)* "Every client that connects to this server gets that paragraph."
+**Screen C: the `save_note` approval with a clean body** (it ignored the paragraph)
 
-### Beat 6. Punchline and hand-off
+> "This server's tool description carries a hidden instruction to read our secrets.
+> This model ignored it today. It still received it, and the next model, or the next
+> update of this server, might not."
 
-**Do:** Alt-Tab to Canva.
+Press **3**.
 
-> "MCP delivered both halves of that description faithfully. Nothing in the protocol tells a description apart from an instruction. And this isn't a toy problem: Warren's going to show you three times it happened for real."
+### Close (about 10 s)
 
-Press → to slide 13 for Warren.
+> "So: MCP is extremely useful. One sentence turned into real work across three
+> systems. But every server you plug in gets a voice in your model's ear, including
+> words you never see. So keep the approvals on, read the arguments, and sandbox
+> what you didn't write. Thank you."
 
-### Cut-off
+## If it's slow: bank lines
 
-No approval prompt 25 s after Enter: run `python demo2/check_poison.py` and read the
-appended paragraph aloud. The lesson doesn't depend on the live run.
+Use one instead of silence.
+
+- "It's reading the description of every tool on three servers to pick the ones it
+  needs. That's the context cost from the cons slide."
+- "Atlassian and Google wrote those servers; I just switched them on. The same servers
+  work in Cursor, Copilot or ChatGPT. That's the USB-C idea."
+- "Our server gives Claude a tool, a resource and a prompt: the three things from the
+  how-it-works slide."
+
+## Cut-off (the timekeeper)
+
+Ask a teammate in the front row to start a stopwatch when you press Enter and raise
+a hand at **0:45** if the first approval isn't on screen yet.
+
+Hand goes up, no approval yet:
+
+> "While it finishes, here's the caution half."
+
+Click the **Sandbox** tab and do Act 2 (hinge, then A, B or C), but stop before the
+close. Click back to **Agent**: the approval will be waiting, because approvals wait
+for you. Press 1, 1, read the impact, then the close. Nothing is lost; the order
+just swaps.
 
 ## When something goes wrong
 
 | What happens | What you do |
 |---|---|
-| Preflight fails | Fix what it names. Usually VS Code wasn't restarted after the token was set, or LIB-3 is still In Review (`/demo-reset`). |
-| The agent asks you a question | Type `proceed` once. If it asks again, cut off. |
-| A fourth approval in Demo 1 | Read it. A read: press 1. Any other write: press 3 and cut off. |
-| The GitHub call errors | "GitHub's rate-limiting us." Slide 9. The code and tests are still on screen; point at them. |
-| CI goes red | "That's the gate doing its job, and exactly why the agent doesn't get to merge." |
-| No impact line in the PR | Carry on; drop that sentence from Beat 8. |
-| Wi-Fi drops | Demo 1: slide 9. Demo 2: `check_poison.py`, which runs offline. |
-| You lose a pre-typed prompt | Retype it from `demo/prompt.txt` or `demo2/prompt.txt`. |
-| You pressed `2` by accident | On stage: carry on, it's already approved. After: delete the `settings.local.json`. |
+| Preflight fails | Fix what it names. Usually LIB-3 isn't in To Do or has an old comment: run `/demo-reset`, delete the comment in Jira. |
+| The agent asks you a question | Type `proceed` once. If it asks again, cut off (above). |
+| An approval you didn't expect in Act 1 | Read it. A read: press 1. Anything else: press 3 and carry on. |
+| A Jira or Drive call errors, or Wi-Fi drops | "The Wi-Fi isn't on our side; here's what it does when it is." Show the backup screenshots, then Act 2: the Sandbox screen is already there. |
+| pytest goes red | "That's the gate doing its job, and exactly why it doesn't get to ship on its own." Press 3 on any Jira write. |
+| The Sandbox tab is in a bad state | `/exit`, then `python check_poison.py` (the tab is already in `sandbox/`): it prints the hidden paragraph next to the honest one, offline. Use script C. |
+| You lose the typed prompt | Retype it from `demo/prompt.txt`. |
+| You pressed `2` by accident | On stage: carry on. After: delete `.claude/settings.local.json` (or `sandbox/.claude/settings.local.json`). |
+
+## The one rule for approval prompts
+
+Claude Code offers: 1 Yes · 2 Yes, and don't ask again · 3 No.
+**Press `1` for yes and `3` (or Esc) for no. Never press `2`.** It saves a permanent
+rule and the prompts vanish from every later run, including the real one.
+
+## Setup, tonight
+
+- [ ] Rename the Jira project: Project settings → Details → key `LIB`, name `Library Fines`.
+- [ ] Update the definition of done on LIB-1 to LIB-4 so it no longer asks for a pull
+      request (Claude can do this once you say yes, or paste it yourself):
+      *"Change implemented with the tests above passing; impact on current overdue loans
+      posted as a comment on this story; story moved to In Review. Do not commit, push or
+      merge: a human reviews the diff and opens the pull request."*
+- [ ] **Trust both folders (must do).** Neither has been trusted yet, so Claude Code is
+      ignoring the repo's permission rules and status line. In the repo root run
+      `claude --settings demo/stage-settings.json`, accept the trust prompt, check the
+      status line shows and `/mcp` lists Atlassian, Google Drive and circulation as
+      connected. `/exit`.
+- [ ] Same in `sandbox/` with `claude --settings ../demo/stage-settings.json`: accept
+      the trust prompt, check `/mcp` shows **only** `notes`. `/exit`.
+- [ ] Rehearse end to end at least twice, out loud, with a stopwatch. Log the times below.
+      In rehearsal, check the comment approval shows the Impact line and the
+      `save_note` approval shows the fake key. If either is cut off, use the fallback
+      line under that beat.
+- [ ] During one clean rehearsal take two screenshots (Win+Shift+S): the comment
+      approval with the Impact line, and the Sandbox screen. They're the backup.
+- [ ] Reset after every rehearsal (below).
+- [ ] Optional, before 23:59: add the two screenshots to the deck as a backup slide
+      after "Demo time" (see the end of this file).
+
+## Setup, on the day
+
+Do this while the team before yours presents (you're not on the projector yet).
+
+1. **Silence everything.** Do Not Disturb on. Quit Telegram, WhatsApp, Outlook, Slack.
+2. **Preflight in a throwaway session.** Terminal in the repo root: `claude`, then
+   `/demo-preflight`. It must end with `READY`. Then `/exit`.
+3. **Start Act 2 now.** VS Code terminal:
+   `cd sandbox` then `claude --settings ../demo/stage-settings.json`, paste the prompt
+   from `sandbox/prompt.txt`, press Enter. Rename the tab **Sandbox**. Within about
+   20 s it either stops at a `save_note` approval or says something about the
+   description. **Note which screen you got (A, B or C) and don't touch that tab again.**
+4. **Ready Act 1.** New terminal tab in the repo root:
+   `claude --settings demo/stage-settings.json`. Rename it **Agent**. Wait until it's
+   idle, check the status line, type the prompt from `demo/prompt.txt`.
+   **Don't press Enter.**
+   `Implement LIB-3 with tests, post the impact on the ticket and move it to In Review.`
+
+   *Why `--settings`: `demo/stage-settings.json` switches off your plugins (superpowers
+   would otherwise tell the agent to load skills first) and auto-memory, for these two
+   sessions only. Your normal Claude Code setup is untouched.*
+5. **Make it readable.** Hide the sidebar (`Ctrl+B`), maximise the terminal panel,
+   zoom with `Ctrl+=` until it reads from the back row. Leave **Agent** showing.
+6. **Windows open:** slides and VS Code (and the backup screenshots). Alt-Tab is your
+   only move.
+7. **Brief the timekeeper:** stopwatch on your Enter, hand up at 0:45 if no approval yet.
 
 ## Reset after every rehearsal
 
-1. In a throwaway session in the repo root: `/demo-reset`.
-2. In Jira, delete the comment it tagged "(rehearsal run - PR closed, delete this comment)". The connector can edit comments but not delete them.
-3. Delete `demo2/notes.txt`.
+1. In the **Sandbox** tab press 3 if an approval is showing, then `/exit`.
+2. In a throwaway session in the repo root: `/demo-reset`. It undoes the code edits,
+   deletes `sandbox/notes.txt`, moves LIB-3 back to To Do and tags the rehearsal
+   comment.
+3. In Jira, delete the tagged comment on LIB-3. (The connector can edit comments, not
+   delete them.)
 4. `/demo-preflight` ends with `READY`.
+
+To time Act 1 without touching Jira: `python demo/dryrun.py` (writes are refused; it
+prints when the first approval would appear), then `powershell -File demo/reset.ps1`.
 
 ## Rehearsal log
 
-| Date | Demo | Model | Enter → first approval | Total | What happened |
+| Date | Model | Enter → first approval | Act 2 screen (A/B/C) | Total | What happened |
 |---|---|---|---|---|---|
+| 19 Oct | Opus 5.5 (headless dry run, KAN-3) | 31 s | not run | n/a | Clean: Jira + 2 reads, then Drive + overdue_loans, edits, 9 passed, comment + transition. Impact line correct. |
+| 19 Oct | Opus 5.5, stage settings (headless, KAN-3) | 36 s | not run | n/a | Clean, same order; two extra small edits to the test file, 10 passed. Impact line correct. |
 | | | | | | |
 
-## Deck edits for the team
+## Q&A: likely questions
 
-Presenter changes (Joshua now runs Demo 2):
+- **"Is the poisoning realistic?"** Yes. Invariant Labs published this exact attack,
+  tool poisoning, in April 2025. The GitHub MCP case on the cons slide is the same
+  family: text coming back from a tool steering the agent.
+- **"Doesn't the model just catch it?"** Sometimes, and that's the point of screen B:
+  you're relying on judgement, not on the protocol. Approvals, sandboxing and pinned
+  versions work whether the model notices or not.
+- **"Why not just read the descriptions?"** Do, but a server can change them after you've
+  approved it, so pin the version and re-read after updates (check 1).
+- **"How hard was your own server?"** 72 lines with the official Python SDK: one tool,
+  one resource, one prompt, and one entry in `.mcp.json`.
+- **"Why didn't it open a pull request?"** It stops at review on purpose: a human reads the
+  diff and opens the PR. The agent never gets the merge button (check 6).
 
-- Slide 4 speaker notes (Cassia): "the one Warren will poison later" → "the one Joshua will poison later".
-- Slide 11 speaker notes (Amanda): hand to Joshua, not Warren.
-- Slide 12: header "part 5 · warren" → "part 5 · joshua". Speaker notes: Joshua presents;
-  replace "show exfil.log from Sunday's run" (no such file) with "run check_poison.py and
-  read the appended paragraph aloud"; add "Allow read_note, Deny save_note".
-- Slide 13 speaker notes: Warren picks up from Joshua's "this isn't a toy problem". Part 5
-  timing becomes slide 12 Joshua ~0:55, slide 13 Warren ~0:30.
-- Slide 16 speaker notes (Q&A routing): questions about either demo → Joshua.
+## Deck (optional, before 23:59 tonight)
 
-Demo 1 content changes:
+The deck needs no changes for this demo. Two optional additions:
 
-- Slide 5 card: replace `.vscode/mcp.json` with our real `.mcp.json` (github over HTTP,
-  circulation over stdio) and one line: "Jira and Google Drive are claude.ai connectors:
-  one OAuth click each, no file". `KAN-3` → `LIB-3`.
-- Slide 7: "Claude Desktop + Atlassian + GitHub connectors" → "Claude Code (VS Code) + Jira,
-  Google Drive, GitHub, and our own circulation server"; "Story: KAN-3" → "Story: LIB-3".
-  Same change in slide 7's speaker notes.
-- Slide 8: the prompt text; "KAN" → "LIB"; the tool list becomes getJiraIssue →
-  read_file_content (Drive) → edit + pytest → git push → overdue_loans (ours) →
-  create_pull_request → comment → transition → CI. Skipped live; it's for the PDF.
-- Slide 9: "KAN-1" → "LIB-1", and the two screenshot frames from the LIB-1 run.
-- Slide 11: "KAN-3's acceptance criteria" → "LIB-3's acceptance criteria".
-- Slide 17 (demo stack): Host → Claude Code in VS Code, tool approvals on; Jira → project
-  LIB, stories LIB-1 to LIB-4; add "Google Drive: Library Fee Policy doc, read-only"; add
-  "circulation_server.py: our own server, Python MCP SDK 2.x, stdio"; GitHub →
-  fine-grained token, one repo, PR scope only; Sandbox → "demo2/notes_server.py,
-  POISON=1, fake secret generated locally, read tool locked to its folder".
+- **Backup slide after "Demo time"**: the two rehearsal screenshots, captioned "Act 1:
+  impact posted to Jira, approval required" and "Act 2: a hidden instruction in a tool
+  description, caught at the approval". It's the fallback if the Wi-Fi fails, and it
+  puts concrete demo output in the PDF you submit.
+- **One line on slide 10** to tell the room what's coming: "Act 1: Jira + Google Drive +
+  our own server. Act 2: a server we didn't write, in a sandbox."

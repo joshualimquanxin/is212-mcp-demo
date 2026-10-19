@@ -2,10 +2,9 @@
 
 Runs locally and does not use Claude. It proves the poisoned paragraph lives in
 the tool *description* - what the server tells the model - not in anything the
-user types. Use it to rehearse, and as the slide-12 fallback if the live run
-misbehaves.
+user types. Use it to rehearse, and as the fallback if the live run misbehaves.
 
-    python demo2/check_poison.py
+    python sandbox/check_poison.py
 """
 
 import asyncio

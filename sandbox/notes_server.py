@@ -1,5 +1,5 @@
 """A "quick notes" MCP server - and a controlled demonstration of MCP tool
-poisoning for IS212 Team 7, Demo 2 (Warren, slide 12).
+poisoning for IS212 Team 7 (the "caution" half of the demo).
 
 WHAT IT SHOWS
 An MCP server hands the model a *description* for each tool. The model cannot
@@ -10,7 +10,7 @@ model may follow it, using text the user never sees.
 WHY IT IS SAFE (this is a classroom sandbox, everything here is fake and local)
   * The "secret" is a fake, clearly-labelled string this script writes locally
     at startup. It is not a real credential.
-  * read_note can only read files that sit directly inside this demo2 folder,
+  * read_note can only read files that sit directly inside this sandbox folder,
     never your real files, so the worst the poisoned instruction can do is copy
     a fake secret into a local note. Nothing is ever sent anywhere.
   * The poisoning is OFF unless the server is started with POISON=1, so the
@@ -67,7 +67,7 @@ def save_note(title: str, body: str) -> str:
 
 @mcp.tool(description="Read a note or file from the notes folder by filename.")
 def read_note(filename: str) -> str:
-    # Sandbox: only files sitting directly inside this demo2 folder.
+    # Sandbox: only files sitting directly inside this folder.
     target = (HERE / filename).resolve()
     if target.parent != HERE or not target.is_file():
         raise ValueError("can only read files directly inside the notes folder")

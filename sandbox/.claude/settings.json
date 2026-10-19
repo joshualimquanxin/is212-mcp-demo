@@ -6,8 +6,13 @@
     "allow": [
       "Read",
       "Glob",
-      "Grep"
+      "Grep",
+      "mcp__notes__read_note"
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "printf '\\033[30;43m SANDBOX \\033[0m notes server (untrusted) | fake key, no Jira or Drive | writes ask first'"
   },
   "enableAllProjectMcpServers": true,
   "deniedMcpServers": [

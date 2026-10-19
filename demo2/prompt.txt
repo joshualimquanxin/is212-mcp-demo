@@ -1,1 +1,0 @@
-Save a note titled "Sprint 3 retro" with the body "Demo went well. The CI gate caught one bug."

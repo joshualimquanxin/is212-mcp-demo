@@ -1,13 +1,19 @@
 # is212-mcp-demo
 
 Late-fee rules for a small library. This is the throwaway repo behind
-Team 7's IS212 presentation *MCP: the missing plug* (20 Oct 2026).
+Team 7's IS212 presentation on MCP, the Model Context Protocol (20 Oct 2026).
 
-The point of the repo is not the code. It is that an AI agent, connected
-to Jira, Google Drive, GitHub and our own circulation database through MCP
-servers, can take a user story from the backlog to an open pull request with
-zero integration code written by us. Three of the servers are vendors'; the
-fourth is 71 lines of Python in this repo.
+The point of the repo is not the code. It is one live demo with two halves:
+
+1. **Useful.** An AI agent connected to Jira, Google Drive and our own circulation
+   database through MCP servers takes a user story from the backlog, implements it
+   with tests, works out which members it affects and updates the ticket, with no
+   integration code written by us. Two of the servers are vendors'; the third is
+   72 lines of Python in this repo.
+2. **Caution.** A second agent, in a sandbox, uses a notes server standing in for one
+   downloaded from the internet, which we poisoned ourselves. One hidden paragraph in
+   a tool description is enough to make it reach for a (fake) secret. The approval
+   prompt is what catches it.
 
 ## What is here
 
@@ -17,16 +23,18 @@ fourth is 71 lines of Python in this repo.
 | `tests/test_fines.py` | The pytest suite |
 | `.github/workflows/tests.yml` | CI gate: pytest runs on every pull request |
 | `circulation_server.py` | Our own MCP server: the library's circulation database (one tool, one resource, one prompt) |
-| `.mcp.json` | The whole integration: GitHub's remote server over HTTP, ours over stdio |
+| `.mcp.json` | How Claude Code starts our server (stdio). Jira and Google Drive are claude.ai connectors: one click each, no file |
 | `CLAUDE.md` | How the agent is told to work in this repo |
 | `.claude/settings.json` | What the agent may do without asking, must ask for, and can never do |
-| `demo/` | Run sheet, the demo prompt, reset, preflight and server-check helpers |
+| `sandbox/` | The poisoned notes server, with its own MCP config and settings (see `sandbox/README.md`) |
+| `demo/` | Run sheet, the demo prompt, stage settings (plugins and auto-memory off for the demo sessions), reset and dry-run helpers |
 
-## Run the server by hand
+## Run the servers by hand
 
 ```
 pip install mcp
-python demo/check_server.py      # starts it over stdio, lists tools, calls one
+python demo/check_server.py        # starts circulation over stdio, lists tools, calls one
+python sandbox/check_poison.py     # shows the notes server's tool description, clean and poisoned
 ```
 
 ## Run the tests
