@@ -5,5 +5,9 @@ __pycache__/
 .env
 .claude/settings.local.json
 demo/logs/
+# demo 2 sandbox: fake secret and notes are generated at runtime, never committed
+demo2/secrets.txt
+demo2/notes.txt
+demo2/.claude/settings.local.json
 # course material: SMU restricted, never push
 *.pdf

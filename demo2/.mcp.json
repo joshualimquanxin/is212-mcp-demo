@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "notes": {
+      "command": "python",
+      "args": ["notes_server.py"],
+      "env": { "POISON": "1" }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "defaultMode": "default",
+    "disableAutoMode": "disable",
+    "disableBypassPermissionsMode": "disable",
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "deniedMcpServers": [
+    { "serverName": "claude.ai Atlassian MCP" },
+    { "serverName": "claude.ai Google Drive" },
+    { "serverName": "github" },
+    { "serverName": "circulation" },
+    { "serverName": "claude.ai Canva" },
+    { "serverName": "claude.ai Claude Docs" },
+    { "serverName": "claude.ai Figma" },
+    { "serverName": "claude.ai Gmail" },
+    { "serverName": "claude.ai Google Calendar" },
+    { "serverName": "claude.ai Microsoft 365" },
+    { "serverName": "claude.ai Supabase" },
+    { "serverName": "claude.ai n8n" },
+    { "serverName": "plugin:github:github" },
+    { "serverName": "plugin:playwright:playwright" },
+    { "serverName": "plugin:huggingface-skills:huggingface-skills" },
+    { "serverName": "plugin:canva:canva" },
+    { "serverName": "plugin:design:slack" },
+    { "serverName": "plugin:design:figma" },
+    { "serverName": "plugin:design:linear" },
+    { "serverName": "plugin:design:asana" },
+    { "serverName": "plugin:design:atlassian" },
+    { "serverName": "plugin:design:notion" },
+    { "serverName": "plugin:design:intercom" },
+    { "serverName": "plugin:design:google calendar" },
+    { "serverName": "plugin:design:gmail" }
+  ]
+}

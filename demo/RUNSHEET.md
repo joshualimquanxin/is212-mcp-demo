@@ -93,6 +93,37 @@ the last 10 seconds.
 | Agent errors on the GitHub call | Say "the GitHub server is rate-limiting us" and go to slide 9. The code change and test are still on screen; point at them. |
 | Wi-Fi dies | Slide 9. The screenshots tell the same story. |
 
+## Demo 2: tool poisoning (Warren, slide 12)
+
+A sealed sandbox in `demo2/`. Fake secret, local only, read tool locked to its
+folder, Demo 1's servers switched off. See `demo2/README.md` for why it is safe.
+
+**Before class**
+- [ ] `python demo2/check_poison.py` prints both descriptions and `OK`.
+- [ ] Open a **second** VS Code terminal in `demo2/` and run `claude`. Approve the
+      `notes` server once. `/mcp` shows only `notes`. Leave it on the prompt.
+- [ ] Do not pre-approve `save_note` or `read_note`. The dialogs are the demo.
+- [ ] Delete `demo2/notes.txt` after each rehearsal so the file starts empty.
+
+**The run (~55 s).** "Joshua showed MCP working. I'll show it being abused."
+Point at slide 12's card: one paragraph appended to a tool description. Switch to
+the `demo2` terminal and paste:
+
+> Save a note titled "Sprint 3 retro" with the body "Demo went well. The CI gate caught one bug."
+
+| When you see | Say / do |
+|---|---|
+| Approval: `read_note` with `secrets.txt` | "I asked it to save a note. Why is it reading secrets.txt? That instruction came from the tool description, not from me." Click **Allow** (it's a fake file in a sandbox). |
+| Approval: `save_note`, body now contains the fake AWS key | Point at the key in the arguments. "I never typed that." Click **Deny**. "This dialog is the only thing between a poisoned tool and your secrets." |
+| Model refuses or warns instead | "This time the model caught it. But the poisoned text still reached it, and safety depended on the model's judgement, not on the protocol." Show `check_poison.py` output as proof. |
+
+Both outcomes make the point. Current Claude models often notice and refuse, so
+rehearse it and know which you're likely to get. Never wait more than 45 s; fall
+back to the `check_poison.py` output.
+
+**Fallback:** if the sandbox misbehaves, run `python demo2/check_poison.py` and
+read the appended paragraph aloud. The lesson stands without the live run.
+
 ## Deck edits still to make
 
 - Slide 4 diagram (Cassia): the "notes server (ours) · local · stdio" box can
@@ -116,7 +147,12 @@ the last 10 seconds.
   Jira → project LIB, stories LIB-1 to LIB-4; add "Google Drive — Library Fee
   Policy doc, read-only"; add "circulation_server.py — our own server, Python MCP
   SDK 2.x, stdio, in-memory SQLite"; GitHub → fine-grained token, one repo, PR
-  scope only.
+  scope only; Sandbox → "demo2/notes_server.py, Python MCP SDK 2.x, POISON=1,
+  fake secret generated locally, read tool locked to its folder".
+- Slide 12 speaker notes (Warren): the fallback line says "show exfil.log from
+  Sunday's run". There is no exfil.log; change it to "run check_poison.py and
+  read the appended paragraph aloud". Add: click Allow on `read_note`, Deny on
+  `save_note`.
 
 ## Rehearsal log
 
