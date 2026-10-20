@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "circulation": {
-      "command": "python",
-      "args": ["circulation_server.py"]
-    }
-  }
-}
