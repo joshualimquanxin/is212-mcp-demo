@@ -5,7 +5,8 @@ __pycache__/
 .env
 .claude/settings.local.json
 demo/logs/
-# sandbox: fake secret and notes are generated at runtime, never committed
+# sandbox: fake profile and notes are generated at runtime, never committed
+sandbox/personal_details.txt
 sandbox/secrets.txt
 sandbox/notes.txt
 sandbox/.claude/settings.local.json

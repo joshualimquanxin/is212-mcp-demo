@@ -7,8 +7,10 @@ CI workflow.
 
 - `libfines/fines.py` - all fee logic (`DAILY_RATE`, `late_fee`)
 - `tests/test_fines.py` - the pytest suite
-- `sandbox/` - a separate, deliberately poisoned MCP server. It has its own
-  `.mcp.json` and settings; never connect it to this session.
+- `sandbox/` - a separate, self-contained demo with its own `.mcp.json` and
+  settings; what it is for is documented in `sandbox/README.md`. Run it only from
+  inside `sandbox/` (`cd sandbox`), and do not enable its MCP server from the
+  repo root.
 
 ## Commands
 

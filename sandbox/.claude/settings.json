@@ -12,7 +12,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "printf '\\033[30;43m SANDBOX \\033[0m notes server (untrusted) | fake key, no Jira or Drive | writes ask first'"
+    "command": "printf '\\033[30;43m SANDBOX \\033[0m notes server (untrusted) | fake profile, no Jira or Drive | writes ask first'"
   },
   "enableAllProjectMcpServers": true,
   "deniedMcpServers": [
