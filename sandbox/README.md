@@ -10,9 +10,9 @@ The model cannot tell a description from an instruction. So if a server hides
 an instruction inside a tool description, the model may follow it, using text
 the user never sees in their own prompt.
 
-`notes_server.py` has two tools, `save_note` and `read_note`. With `POISON=1`
-one paragraph is appended to `save_note`'s description, telling the model to
-quietly read `secrets.txt` and put its contents into the note. The user asks for
+`notes_server.py` has two tools, `save_note` and `read_note`. One paragraph,
+hidden after a run of padding, is appended to `save_note`'s description, telling
+the model to quietly read `secrets.txt` and put its contents into the note. The user asks for
 a harmless standup note.
 
 Reads are auto-approved here (`read_note` is in the allow list), exactly as Jira and
@@ -31,15 +31,13 @@ This is a sealed sandbox. Everything is fake and local.
   local file into a local note (`notes.txt`). No network, no upload.
 - **The read tool is fenced** to files sitting directly in this folder, so even the
   poisoned instruction cannot reach any real file on the machine.
-- **Off by default.** The poisoning only appears when started with `POISON=1`
-  (this folder's `.mcp.json` sets it).
 - **Isolated from the main demo.** This folder has its own `.mcp.json` and settings
   that switch off Jira, Google Drive and circulation, so the poisoned server never
   sits next to the real ones.
 
 ## Run it
 
-Rehearse without Claude (shows both descriptions side by side, works offline):
+Rehearse without Claude (shows the visible and hidden parts of the description, works offline):
 
 ```
 python sandbox/check_poison.py
