@@ -53,7 +53,8 @@ server as "our circulation server".
    `Impact: N of M current overdue loans change; largest reduction $X.XX (<item type>, <days> days late, $old -> $new).`
 4. Run `python -m pytest -q`. It must pass before anything is written to Jira.
 5. In parallel: add one comment to the story with `addOrEditJiraIssueComment`, body
-   `Implemented with tests (<count> passing). <Impact line>`, and move the story with
+   with `contentFormat: html`, body
+   `<p><strong><u>Change ready for human review:</u></strong></p><p>Fee rule and tests updated locally (<count> passing), not yet merged. <Impact line></p>`, and move the story with
    `transitionJiraIssue` using transition name `In Review`.
 6. Stop there. Do not create branches, commit or push. A human reviews the diff and
    opens the pull request; the agent never gets the merge button. End with this one
