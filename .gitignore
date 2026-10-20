@@ -11,3 +11,6 @@ sandbox/notes.txt
 sandbox/.claude/settings.local.json
 # course material: SMU restricted, never push
 *.pdf
+
+# backup video: rendered output, recordings and narration audio (rebuild with demo/video/)
+demo/backup/

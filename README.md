@@ -28,6 +28,7 @@ The point of the repo is not the code. It is one live demo with two halves:
 | `.claude/settings.json` | What the agent may do without asking, must ask for, and can never do |
 | `sandbox/` | The poisoned notes server, with its own MCP config and settings (see `sandbox/README.md`) |
 | `demo/` | Run sheet, the demo prompt, stage settings (plugins and auto-memory off for the demo sessions), reset and dry-run helpers |
+| `demo/video/` | Records a real run in a hidden terminal and builds the narrated, subtitled backup video into `demo/backup/` (gitignored) |
 
 ## Run the servers by hand
 
