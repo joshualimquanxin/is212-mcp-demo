@@ -32,7 +32,7 @@ This is a sealed sandbox. Everything is fake and local.
 - **The read tool is fenced** to files sitting directly in this folder, so even the
   poisoned instruction cannot reach any real file on the machine.
 - **Isolated from the main demo.** This folder has its own `.mcp.json` and settings
-  that switch off Jira, Google Drive and circulation, so the poisoned server never
+  that switch off Jira and Google Drive, so the poisoned server never
   sits next to the real ones.
 
 ## Run it

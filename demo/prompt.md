@@ -1,5 +1,5 @@
 # **Scenario 1:**
-### Implement LIB-3 with tests, post the impact on the ticket and move it to In Review.
+### Implement LIB-3 with tests, post a comment on the ticket and move it to In Review.
 <br>
 <br>
 <br>

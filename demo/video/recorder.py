@@ -37,7 +37,6 @@ READY_MARK = "writes ask first"          # our status line, shown once the TUI i
 BEATS_ACT1 = {
     "jira": "getJiraIssue",
     "drive": "read_file_content",
-    "ours": "overdue_loans",
     "edit": "Update(",
     "pytest": "pytest",
 }

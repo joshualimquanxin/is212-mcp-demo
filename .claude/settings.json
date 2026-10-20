@@ -12,7 +12,6 @@
       "Bash(python -m pytest*)",
       "Bash(pytest*)",
       "Bash(python sandbox/check_poison.py*)",
-      "Bash(python demo/check_server.py*)",
       "Bash(git status*)",
       "Bash(git diff*)",
       "Bash(git log*)",
@@ -25,7 +24,6 @@
       "mcp__claude_ai_Atlassian_MCP__executeRead",
       "mcp__claude_ai_Google_Drive__read_file_content",
       "mcp__claude_ai_Google_Drive__get_file_metadata",
-      "mcp__circulation__overdue_loans",
       "ListMcpResourcesTool",
       "ReadMcpResourceTool"
     ],
@@ -66,7 +64,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "printf '\\033[30;46m MCP \\033[0m Jira + Google Drive (remote) | circulation (ours, local) | writes ask first'"
+    "command": "printf '\\033[30;46m MCP \\033[0m Jira + Google Drive (remote) | writes ask first'"
   },
   "enableAllProjectMcpServers": true,
   "deniedMcpServers": [

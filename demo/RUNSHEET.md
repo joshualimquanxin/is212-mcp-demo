@@ -5,8 +5,8 @@ used with caution.** It closes the talk on slide 10 ("Demo time"), straight afte
 "Still on you", and Q&A starts the moment it ends.
 
 **The thread.** In Act 1 the agent acts on text it gets from MCP servers: it follows
-a link in a ticket, takes a number from a policy doc, and asks our own server who is
-affected. That's the superpower. In Act 2 a second agent acts on text hidden in a
+a link in a ticket and takes a number out of a policy doc nobody told it to open.
+That's the superpower. In Act 2 a second agent acts on text hidden in a
 tool description from an untrusted server. Same superpower, pointed the wrong way.
 The same approval box that let the first agent write to Jira is what stops the
 second. Say that out loud; it's the line people remember.
@@ -16,8 +16,8 @@ second. Say that out loud; it's the line people remember.
 | | Act 1: useful | Act 2: caution |
 |---|---|---|
 | VS Code terminal tab | **Agent** (repo root) | **Sandbox** (`sandbox/`) |
-| Status line at the bottom | `MCP` Jira + Google Drive (remote) \| circulation (ours, local) | `SANDBOX` notes server (untrusted) \| fake key |
-| MCP servers | Atlassian (Jira), Google Drive, circulation (ours) | notes (stands in for a downloaded server; we poisoned it) |
+| Status line at the bottom | `MCP` Jira + Google Drive (remote) | `SANDBOX` notes server (untrusted) \| fake key |
+| MCP servers | Atlassian (Jira), Google Drive (both remote, both vendors') | notes (local, stands in for a downloaded server; we poisoned it) |
 | Started | Live: you press Enter on stage | Before the talk; it waits at its approval |
 | Your keys | `1`, `1` | `3` |
 | Target | Enter → first approval about 0:30 | about 0:25 of talking |
@@ -27,11 +27,13 @@ Slot 2:00. Script about 1:30. The last 0:30 is buffer: don't fill it.
 ## Timeline
 
 The clock starts when slide 10 appears. Agent times are from the 19 Oct runs
-(Opus 5.5): the first approval came 31 to 41 s after Enter. If the screen gets ahead
-of you, keep narrating in order: everything stays on screen and approvals wait for you.
+(Opus 5.5): the first approval came 31 to 41 s after Enter. Those runs still called a
+third server that has since been removed, so expect the approval a few seconds
+earlier; take the real number from your next rehearsal. If the screen gets ahead of
+you, keep narrating in order: everything stays on screen and approvals wait for you.
 
 **What the screen shows (Claude Code v2.1.303).** It groups tool calls into one grey
-line ("Calling Google Drive, circulation…"), so CLAUDE.md has the agent write one
+line ("Calling Jira, Google Drive…"), so CLAUDE.md has the agent write one
 white line before each step saying which MCP server it's using. Those white lines are
 your cues; point at them. Don't hunt for tool names like `getJiraIssue`: they aren't
 shown.
@@ -41,9 +43,9 @@ shown.
 | 0:00 | Slide 10 | Opening line, Alt-Tab, Enter |
 | ~0:05 | "Mulling…" (it plans for about 10 s) | A bank line (below) |
 | ~0:15 | "…from Jira through Atlassian's MCP server" | "Pulls the story out of Jira" |
-| ~0:20 | "…Google Drive's MCP server … our circulation server" | The twist, then "this one's ours" |
+| ~0:20 | "…the fee policy from Google Drive's MCP server" | The twist |
 | ~0:30 | "$20" line, two diffs, "Running the pytest suite" | "Twenty dollars from the policy. Green." |
-| ~0:40 | Approval: "Atlassian MCP — Add or edit Jira issue comment" | Read the impact off the screen, press `1` |
+| ~0:40 | Approval: "Atlassian MCP — Add or edit Jira issue comment" | Read the comment off the screen, press `1` |
 | ~0:45 | Approval: "Atlassian MCP — Transition Jira issue" | Press `1`, "I never opened Jira" |
 | ~0:50 | Switch to **Sandbox** tab | Hinge line, then Act 2 |
 | ~1:15 | Press `3` | Close |
@@ -57,8 +59,8 @@ screen, never from memory. Pause after the two twists. Never apologise for speed
 
 ### Opening (slide 10, about 5 s)
 
-> "Let's see it. One sentence to Claude Code, connected to three MCP servers:
-> Atlassian's, Google's, and one we wrote ourselves."
+> "Let's see it. One sentence to Claude Code, connected to two MCP servers:
+> Atlassian's and Google's."
 
 **Do:** Alt-Tab to VS Code (the **Agent** tab is showing). Click inside it once. Press **Enter**.
 
@@ -74,16 +76,13 @@ screen, never from memory. Pause after the two twists. Never apologise for speed
 > "First it pulls the story out of Jira, acceptance criteria and all. That's the use
 > case from earlier."
 
-**Screen:** "…section 3 of the fee policy from Google Drive's MCP server … our circulation server", then the grey "Calling Google Drive, circulation…"
+**Screen:** "…section 3 of the fee policy from Google Drive's MCP server", then the grey "Calling Google Drive…"
 
 > "Now the twist: the ticket doesn't say what the cap is. It links to our fee policy,
-> so it followed the link into Google Drive. Different company, same plug."
+> so it followed the link into Google Drive. Different company, same plug, and I never
+> told it to go there."
 
-*Pause one beat.* Then point at "our circulation server":
-
-> "And this one's ours: about seventy lines of Python wrapping the library's loan
-> database, running right here on this laptop. It's asking which members this
-> change will hit."
+*Pause one beat.*
 
 **Screen:** "Policy section 3 caps any item at $20.00…", the diffs to `fines.py` and `test_fines.py`, then "Running the pytest suite…"
 
@@ -93,13 +92,14 @@ screen, never from memory. Pause after the two twists. Never apologise for speed
 **Screen:** the approval box "Tool use · Atlassian MCP — Add or edit Jira issue comment", with the comment text under `commentBody`
 
 > "And it stops. Anything it writes to Jira needs me. And I read what it's about to
-> send:" *(point at the Impact line and read it, e.g. "three of twelve loans change,
-> the biggest drops by thirty dollars")*
+> send:" *(point at the comment and read it off the screen, e.g. "fees now capped at
+> twenty dollars an item, nine tests passing, not merged")*
 
-Press **1**. *If the comment is cut off in the prompt, skip the impact sentence.*
+Press **1**. *If the comment is cut off in the prompt, just say "and I read it before
+it goes".*
 
 **Screen:** the approval box "Atlassian MCP — Transition Jira issue". Press **1**. The
-agent ends with one line: "LIB-3 moved to In Review: N tests passing, impact posted on
+agent ends with one line: "LIB-3 moved to In Review: N tests passing, comment posted on
 the ticket."
 
 > "And the card moves to In Review. I never opened Jira."
@@ -172,12 +172,12 @@ Press **3**.
 
 Use one instead of silence.
 
-- "It's reading the description of every tool on three servers to pick the ones it
+- "It's reading the description of every tool on both servers to pick the ones it
   needs. That's the context cost from the cons slide."
 - "Atlassian and Google wrote those servers; I just switched them on. The same servers
   work in Cursor, Copilot or ChatGPT. That's the USB-C idea."
-- "Our server gives Claude a tool, a resource and a prompt: the three things from the
-  how-it-works slide."
+- "Tools, resources and prompts: that's everything a server offers, and the agent picks
+  what it needs. The three things from the how-it-works slide."
 
 ## Cut-off (the timekeeper)
 
@@ -190,7 +190,7 @@ Hand goes up, no approval yet:
 
 Click the **Sandbox** tab and do Act 2 (hinge, then A, B or C), but stop before the
 close. Click back to **Agent**: the approval will be waiting, because approvals wait
-for you. Press 1, 1, read the impact, then the close. Nothing is lost; the order
+for you. Press 1, 1, read the comment, then the close. Nothing is lost; the order
 just swaps.
 
 ## When something goes wrong
@@ -215,20 +215,21 @@ rule and the prompts vanish from every later run, including the real one.
 ## Setup, tonight
 
 - [ ] Rename the Jira project: Project settings → Details → key `LIB`, name `Library Fines`.
-- [ ] Update the definition of done on LIB-1 to LIB-4 so it no longer asks for a pull
-      request (Claude can do this once you say yes, or paste it yourself):
-      *"Change implemented with the tests above passing; impact on current overdue loans
-      posted as a comment on this story; story moved to In Review. Do not commit, push or
-      merge: a human reviews the diff and opens the pull request."*
+- [ ] **LIB-3's definition of done still asks for "impact on current overdue loans",
+      which no server can answer now. Replace it (and do the same on LIB-1, LIB-2 and
+      LIB-4, which still ask for a pull request):**
+      *"Change implemented with the tests above passing; the rule and the passing test
+      count posted as a comment on this story; story moved to In Review. Do not commit,
+      push or merge: a human reviews the diff and opens the pull request."*
 - [ ] **Trust both folders (must do).** Neither has been trusted yet, so Claude Code is
       ignoring the repo's permission rules and status line. In the repo root run
       `claude --settings demo/stage-settings.json`, accept the trust prompt, check the
-      status line shows and `/mcp` lists Atlassian, Google Drive and circulation as
-      connected. `/exit`.
+      status line shows and `/mcp` lists Atlassian and Google Drive as connected.
+      `/exit`.
 - [ ] Same in `sandbox/` with `claude --settings ../demo/stage-settings.json`: accept
       the trust prompt, check `/mcp` shows **only** `notes`. `/exit`.
 - [ ] Rehearse end to end at least twice, out loud, with a stopwatch. Log the times below.
-      In rehearsal, check the comment approval shows the Impact line and the
+      In rehearsal, check the comment approval shows the Rule line and the
       `save_note` approval shows the fake key. If either is cut off, use the fallback
       line under that beat.
 - [x] Backup: `demo/backup/mcp-demo-backup.mp4` (1:29, narrated, subtitled, with
@@ -256,7 +257,7 @@ Do this while the team before yours presents (you're not on the projector yet).
    `claude --settings demo/stage-settings.json`. Rename it **Agent**. Wait until it's
    idle, check the status line, type the prompt from `demo/prompt.txt`.
    **Don't press Enter.**
-   `Implement LIB-3 with tests, post the impact on the ticket and move it to In Review.`
+   `Implement LIB-3 with tests, post a comment on the ticket and move it to In Review.`
 
    *Why `--settings`: `demo/stage-settings.json` switches off your plugins (superpowers
    would otherwise tell the agent to load skills first) and auto-memory, for these two
@@ -302,8 +303,9 @@ prints when the first approval would appear), then `powershell -File demo/reset.
 - **"Why not just read the descriptions?"** Do: Claude Code even prints the start of one
   in each approval box. But a server can change its descriptions after you've approved
   it, so pin the version and re-read after updates (check 1).
-- **"How hard was your own server?"** 72 lines with the official Python SDK: one tool,
-  one resource, one prompt, and one entry in `.mcp.json`.
+- **"How hard is it to write one?"** The notes server in `sandbox/` is 84 lines with
+  the official Python SDK: two tools and one entry in `.mcp.json`. That is also why a
+  server you didn't write is so easy for someone else to poison.
 - **"Why didn't it open a pull request?"** It stops at review on purpose: a human reads the
   diff and opens the PR. The agent never gets the merge button (check 6).
 
@@ -312,8 +314,8 @@ prints when the first approval would appear), then `powershell -File demo/reset.
 The deck needs no changes for this demo. Two optional additions:
 
 - **Backup slide after "Demo time"**: the two stills in `demo/backup/`, captioned "Act 1:
-  impact posted to Jira, approval required" and "Act 2: a hidden instruction in a tool
+  the change posted to Jira, approval required" and "Act 2: a hidden instruction in a tool
   description, in plain sight at the approval". It puts concrete demo output in the PDF
   you submit. (The live fallback is the backup video.)
-- **One line on slide 10** to tell the room what's coming: "Act 1: Jira + Google Drive +
-  our own server. Act 2: a server we didn't write, in a sandbox."
+- **One line on slide 10** to tell the room what's coming: "Act 1: Jira + Google
+  Drive. Act 2: a local server we didn't write, in a sandbox."

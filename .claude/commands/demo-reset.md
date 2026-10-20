@@ -10,7 +10,8 @@ Reset the demo. Do all of it without asking questions and print one line per ste
 2. Jira: `getJiraIssue` LIB-3. If the status is not "To Do", move it there with
    `transitionJiraIssue` (transition name `To Do`).
 3. Jira comments: list the comments on LIB-3 with `executeRead` operation
-   `listJiraIssueComments`. For every comment whose body contains `Impact:`, edit it
+   `listJiraIssueComments`. For every comment whose body contains `Change ready for
+   human review`, edit it
    with `addOrEditJiraIssueComment` so the body reads exactly
    `(rehearsal run - delete this comment)`. The connector cannot delete comments, so
    end with a reminder to delete them in the Jira UI if any were found.
