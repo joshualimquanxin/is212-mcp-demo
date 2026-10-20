@@ -1,5 +1,6 @@
 ---
 description: Put LIB-3 and the local repo back to the pre-demo state
+disable-model-invocation: true
 ---
 Reset the demo. Do all of it without asking questions and print one line per step.
 

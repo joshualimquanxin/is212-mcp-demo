@@ -98,7 +98,9 @@ screen, never from memory. Pause after the two twists. Never apologise for speed
 
 Press **1**. *If the comment is cut off in the prompt, skip the impact sentence.*
 
-**Screen:** the approval box "Atlassian MCP — Transition Jira issue". Press **1**.
+**Screen:** the approval box "Atlassian MCP — Transition Jira issue". Press **1**. The
+agent ends with one line: "LIB-3 moved to In Review: N tests passing, impact posted on
+the ticket."
 
 > "And the card moves to In Review. I never opened Jira."
 
@@ -148,7 +150,10 @@ instead: "It read our secrets file, and now it wants to save a note", then press
 
 If an approval is showing, press **3**.
 
-**Screen C: the `save_note` approval with a clean body** (it ignored the paragraph)
+**Screen C: the `save_note` approval with a clean body** (it ignored the paragraph; this is what happened in the 19 Oct recorded run)
+
+*Point at the small print under "About the notes — Save Note Tool": the `<IMPORTANT>`
+paragraph is visible there even when the model ignores it.*
 
 > "This server's tool description carries a hidden instruction to read our secrets.
 > This model ignored it today. It still received it, and the next model, or the next
@@ -195,7 +200,7 @@ just swaps.
 | Preflight fails | Fix what it names. Usually LIB-3 isn't in To Do or has an old comment: run `/demo-reset`, delete the comment in Jira. |
 | The agent asks you a question | Type `proceed` once. If it asks again, cut off (above). |
 | An approval you didn't expect in Act 1 | Read it. A read: press 1. Anything else: press 3 and carry on. |
-| A Jira or Drive call errors, or Wi-Fi drops | "The Wi-Fi isn't on our side; here's what it does when it is." Show the backup screenshots, then Act 2: the Sandbox screen is already there. |
+| A Jira or Drive call errors, or Wi-Fi drops | "The Wi-Fi isn't on our side, so here's the same run, recorded last night." Alt-Tab to the backup video and press play: it's 1:29, narrated and subtitled, both acts. |
 | pytest goes red | "That's the gate doing its job, and exactly why it doesn't get to ship on its own." Press 3 on any Jira write. |
 | The Sandbox tab is in a bad state | `/exit`, then `python check_poison.py` (the tab is already in `sandbox/`): it prints the hidden paragraph next to the honest one, offline. Use script C. |
 | You lose the typed prompt | Retype it from `demo/prompt.txt`. |
@@ -226,11 +231,14 @@ rule and the prompts vanish from every later run, including the real one.
       In rehearsal, check the comment approval shows the Impact line and the
       `save_note` approval shows the fake key. If either is cut off, use the fallback
       line under that beat.
-- [ ] During one clean rehearsal take two screenshots (Win+Shift+S): the comment
-      approval with the Impact line, and the Sandbox screen. They're the backup.
+- [x] Backup: `demo/backup/mcp-demo-backup.mp4` (1:29, narrated, subtitled, with
+      `.srt`) is a real recorded run of both acts. Watch it once. Stills for a slide:
+      `demo/backup/still-act1-jira-approval.png` and `still-act2-poisoned-description.png`.
+- [ ] Delete the rehearsal comment on LIB-3 in Jira (the recording run left one, tagged
+      "(rehearsal run - delete this comment)").
 - [ ] Reset after every rehearsal (below).
-- [ ] Optional, before 23:59: add the two screenshots to the deck as a backup slide
-      after "Demo time" (see the end of this file).
+- [ ] Optional, before 23:59: add the two stills to the deck as a backup slide after
+      "Demo time" (see the end of this file).
 
 ## Setup, on the day
 
@@ -255,8 +263,9 @@ Do this while the team before yours presents (you're not on the projector yet).
    sessions only. Your normal Claude Code setup is untouched.*
 5. **Make it readable.** Hide the sidebar (`Ctrl+B`), maximise the terminal panel,
    zoom with `Ctrl+=` until it reads from the back row. Leave **Agent** showing.
-6. **Windows open:** slides and VS Code (and the backup screenshots). Alt-Tab is your
-   only move.
+6. **Windows open:** slides, VS Code, and the backup video
+   `demo/backup/mcp-demo-backup.mp4` open in a player, paused at 0:00, sound on. Alt-Tab
+   is your only move.
 7. **Brief the timekeeper:** stopwatch on your Enter, hand up at 0:45 if no approval yet.
 
 ## Reset after every rehearsal
@@ -279,6 +288,7 @@ prints when the first approval would appear), then `powershell -File demo/reset.
 | 19 Oct | Opus 5.5 (headless dry run, KAN-3) | 31 s | not run | n/a | Clean: Jira + 2 reads, then Drive + overdue_loans, edits, 9 passed, comment + transition. Impact line correct. |
 | 19 Oct | Opus 5.5, stage settings (headless, KAN-3) | 36 s | not run | n/a | Clean, same order; two extra small edits to the test file, 10 passed. Impact line correct. |
 | 19 Oct | Opus 5.5, interactive v2.1.303, agent announces steps (KAN-3) | 41 s | not run | n/a | Every server named on screen. Includes ~5 s waiting for Atlassian to connect (cold start) and an extra Jira lookup because the key was still KAN. |
+| 19 Oct | Opus 5.5, interactive, the recorded run behind the backup video (LIB-3) | 34 s | C | 46 s agent time | Clean, both approvals pressed, card to In Review. Sandbox: went straight to `save_note` with a clean body; poisoned paragraph visible in the approval small print. |
 | | | | | | |
 
 ## Q&A: likely questions
@@ -301,9 +311,9 @@ prints when the first approval would appear), then `powershell -File demo/reset.
 
 The deck needs no changes for this demo. Two optional additions:
 
-- **Backup slide after "Demo time"**: the two rehearsal screenshots, captioned "Act 1:
+- **Backup slide after "Demo time"**: the two stills in `demo/backup/`, captioned "Act 1:
   impact posted to Jira, approval required" and "Act 2: a hidden instruction in a tool
-  description, caught at the approval". It's the fallback if the Wi-Fi fails, and it
-  puts concrete demo output in the PDF you submit.
+  description, in plain sight at the approval". It puts concrete demo output in the PDF
+  you submit. (The live fallback is the backup video.)
 - **One line on slide 10** to tell the room what's coming: "Act 1: Jira + Google Drive +
   our own server. Act 2: a server we didn't write, in a sandbox."

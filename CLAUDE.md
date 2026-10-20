@@ -1,15 +1,15 @@
 # is212-mcp-demo
 
 Late-fee rules for a small library. One Python package, one test file, one
-CI workflow. Used for the IS212 Team 7 presentation on MCP.
+CI workflow.
 
 ## Layout
 
 - `libfines/fines.py` - all fee logic (`DAILY_RATE`, `late_fee`)
 - `tests/test_fines.py` - the pytest suite
 - `circulation_server.py` - our own MCP server (see below)
-- `sandbox/` - a separate, deliberately poisoned MCP server for the security half of
-  the demo. It has its own `.mcp.json` and settings; never connect it to this session.
+- `sandbox/` - a separate, deliberately poisoned MCP server. It has its own
+  `.mcp.json` and settings; never connect it to this session.
 
 ## Commands
 
@@ -34,11 +34,10 @@ how a fee is computed is reported with an **Impact** line (step 3).
 
 ## How to deliver a story (LIB-n)
 
-A live audience is watching, so work in as few turns as possible: make the calls
-grouped in one step in parallel, in a single turn. No plans, no questions, no summary
-at the end.
+Work in as few turns as possible: make the calls grouped in one step in parallel, in
+a single turn. No plans, no questions.
 
-The screen groups tool calls, so the audience follows you through your text. Before
+The screen groups tool calls, so people follow the work through your text. Before
 each step's tool calls, write one plain line of under 20 words saying what you are
 doing and which MCP server you are using, based on what you have actually found (for
 example `Reading LIB-3 from Jira through Atlassian's MCP server.`). Name our own
@@ -57,4 +56,7 @@ server as "our circulation server".
    `Implemented with tests (<count> passing). <Impact line>`, and move the story with
    `transitionJiraIssue` using transition name `In Review`.
 6. Stop there. Do not create branches, commit or push. A human reviews the diff and
-   opens the pull request; the agent never gets the merge button.
+   opens the pull request; the agent never gets the merge button. End with this one
+   line and nothing else (no summary, no next steps, no suggestions for the user):
+   `<LIB-n> moved to In Review: <count> tests passing, impact posted on the ticket.`
+   If a step could not finish, say instead, in one line, which step stopped and why.

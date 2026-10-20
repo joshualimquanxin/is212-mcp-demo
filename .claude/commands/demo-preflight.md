@@ -1,5 +1,6 @@
 ---
 description: Check Jira, Google Drive, our server, the sandbox and the local repo before the live demo
+disable-model-invocation: true
 ---
 Run every check below and print one line per check in the form `PASS <check>: <detail>`
 or `FAIL <check>: <detail>`. Do not fix anything. Do not skip a check because an
