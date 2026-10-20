@@ -1,6 +1,7 @@
 """Late-fee calculation.
 
 Daily rates follow the Library Fee Policy, section 2.
+Maximum fee per item from Library Fee Policy, section 3.
 """
 
 # Dollars per day overdue, by item type.
@@ -9,6 +10,9 @@ DAILY_RATE = {
     "dvd": 1.00,
     "magazine": 0.25,
 }
+
+# Maximum late fee per item in dollars (section 3 of the policy).
+MAX_FEE = 20.00
 
 
 def late_fee(item_type: str, days_late: int) -> float:
