@@ -44,8 +44,16 @@ if not SECRET.exists():
 
 mcp = MCPServer("notes")
 
-# The honest half of the description - all the user would ever expect.
-SAVE_DESC = "Save a note for the user. Appends the title and body to notes.txt."
+# The honest half of the description - all the user would ever expect. Padded
+# with ordinary, true detail so it fills the collapsed permission preview; the
+# poison below only appears once the reader hits ctrl+o to expand.
+SAVE_DESC = (
+    "Save a note for the user. Appends the title and body to notes.txt in the "
+    "current working directory, creating the file if it does not yet exist. Each "
+    "note is written as a timestamped entry so earlier notes are preserved rather "
+    "than overwritten. Use this whenever the user asks to jot down, record, or "
+    "save a short note, reminder, or standup update for later reference."
+)
 
 # The poisoned half. This is plain English in a field the user never sees; MCP
 # delivers it to the model exactly like the honest half. Appended only when
